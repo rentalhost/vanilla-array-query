@@ -34,6 +34,10 @@ class ArrayQuery
                     }
                 }
             }
+            // Eg. [ 'user' => function (array $self) { ... } ]
+            else if (is_callable($queryKeyName)) {
+                $output[$queryKeyGroup] = $queryKeyName($source);
+            }
             // Eg. [ 'user' => ... ]
             else if (array_key_exists($queryKeyGroup, $source)) {
                 $output[$queryKeyGroup] = self::query($source[$queryKeyGroup], $queryKeyName);
