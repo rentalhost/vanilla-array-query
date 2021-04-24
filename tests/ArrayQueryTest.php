@@ -49,6 +49,13 @@ class ArrayQueryTest
             ],
 
             [
+                [ 'user' => 'John Doe', 'age' => 18 ],
+                [ 'age', 'user' ],
+                [ 'age' => 18, 'user' => 'John Doe' ],
+                'Extracts both user and age keys (explicitly reversed).',
+            ],
+
+            [
                 [ 'user' => [ 'firstname' => 'John', 'lastname' => 'Doe' ] ],
                 [ 'user' ],
                 [ 'user' => [ 'firstname' => 'John', 'lastname' => 'Doe' ] ],
