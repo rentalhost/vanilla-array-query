@@ -138,6 +138,51 @@ class ArrayQueryTest
                 [ 'test' => [ 'PhpToken' => 1, 'tokenize' => 2 ] ],
                 'Ensure that PhpToken::tokenize() will never be called, because it is_callable().',
             ],
+
+            [
+                [ 'userIds' => [ 1, 2, 3, 4, 5 ] ],
+                [
+                    'countBefore' => static function (array $self) {
+                        return count($self['userIds']);
+                    },
+                    'userIds'     => static function (array $self) {
+                        return array_values(array_filter($self['userIds'], static function (int $number) {
+                            return $number >= 3;
+                        }));
+                    },
+                    'countAfter'  => static function (array $self) {
+                        return count($self['userIds']);
+                    },
+                ],
+                [ 'countBefore' => 5, 'userIds' => [ 3, 4, 5 ], 'countAfter' => 3 ],
+                'Transforms userIds, returning only when it is greater than 3, so countBefore must be 5, but countAfter must be 3.',
+            ],
+
+            [
+                [ 'users' => [ 1, 2, 3 ] ],
+                [
+                    'users' => static function (array $self) {
+                        return array_map(static function (int $id) {
+                            return [ 'id' => $id ];
+                        }, $self['users']);
+                    },
+                ],
+                [ 'users' => [ [ 'id' => 1 ], [ 'id' => 2 ], [ 'id' => 3 ] ] ],
+                'Transforms users in-the-fly, but wrapping values into id array.',
+            ],
+
+            [
+                [ 'users' => [ [ 'id' => 1, 'age' => 25 ], [ 'id' => 2, 'age' => 30 ] ] ],
+                [
+                    'users' => static function (array $self) {
+                        return ArrayQuery::query(array_filter($self['users'], static function (array $users) {
+                            return $users['age'] === 25;
+                        }), [ [ 'id' ] ]);
+                    },
+                ],
+                [ 'users' => [ [ 'id' => 1 ] ] ],
+                'Transforms users, filtering by age === 25 with only id, but keeping the array structure.',
+            ],
         ];
     }
 

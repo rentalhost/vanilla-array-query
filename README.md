@@ -125,9 +125,25 @@ $page = [
     ] 
 ];
 
-ArrayQuery::query($page, [ 'title' => function (array $page) {
+ArrayQuery::query($page, [ 'title' => static function (array $page) {
     return $page['header']['title'];
 } ]) === [ 
     'title' => 'Home', 
+];
+```
+
+This functionality will also allow you to transform an existing key, filtering its elements, for example.
+
+Let's assume, then, that we have a page with a simplified route, but we want to make it absolute. The key will be kept as a route, but its value will change.
+
+It is important to remember that the callable will receive the entire array of that context (the `$page`, in this case), and not the value of the key you are reassigning.
+
+```php
+$page = [ 'route' => '/home' ];
+
+ArrayQuery::query($page, [ 'route' => static function (array $page) {
+    return url($page['route']);
+} ]) === [ 
+    'route' => 'https://.../home', 
 ];
 ```
