@@ -6,21 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.1.2] - 2021-04-24
 
+### Added
+
+- Using a `callable` as *value* of a query, but without a key, allows returns an array generated on-the-fly. The `callable` itself will receives as argument all elements of that level.
+
 ### Changed
 
-- When a `callable` is used as *value*, the source array will be updated to contains the new key accessible to next queries. The original source array will not be affected.
+- When a `callable` is used as *value*, the source array will be updated to contains the new key accessible from the next queries of the same context. The original source array will not be affected.
 
 ## [0.1.1] - 2021-04-22
 
 ### Added
 
-- Using a `callable` as *value* of a query will returns a transformed output to the *key*. The `callable` itself will receives as argument all elements of that level;
+- Using a `callable` as *value* of a query will returns a transformed output to the *key*. The `callable` itself will receives as argument all elements of that level.
 
 ## [0.1.0] - 2020-08-04
 
 ### Added
 
-- Initial version;
+- Initial version.
 
 [0.1.2]: https://github.com/rentalhost/vanilla-array-query/compare/0.1.1..0.1.2
 

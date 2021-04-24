@@ -89,11 +89,11 @@ So, supposing that we have an array containing various information from several 
 $pages = [
     [
         'route' => '/home',
-        'title' => 'Home'
+        'title' => 'Home',
     ],
     [
         'route' => '/admin',
-        'title' => 'Administrative'    
+        'title' => 'Administrative',
     ],
 ];
 
@@ -142,8 +142,39 @@ It is important to remember that the callable will receive the entire array of t
 $page = [ 'route' => '/home' ];
 
 ArrayQuery::query($page, [ 'route' => static function (array $page) {
-    return url($page['route']);
+    return 'https://...' . $page['route'];
 } ]) === [ 
     'route' => 'https://.../home', 
+];
+```
+
+### Advanced extraction
+
+Finally, it is possible to perform an advanced extraction of values, creating keys on-the-fly through a callable as a value, but without a key.
+
+The callable must return an array, where the keys that will be applied to the source array.
+
+Let's assume, then, that we have several pages, and we want to use the own route as the key and the title as value.
+
+```php
+$pages = [
+    [
+        'route' => '/home',
+        'title' => 'Home'
+    ],
+    [
+        'route' => '/admin',
+        'title' => 'Administrative'    
+    ],
+];
+
+ArrayQuery::query($pages, [ static function (array $page) {
+    return array_combine(
+        array_column($page, 'route'),
+        array_column($page, 'title'),
+    );
+} ]) === [ 
+    '/home'  => 'Home',
+    '/admin' => 'Administrative'
 ];
 ```

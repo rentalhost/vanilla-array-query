@@ -28,6 +28,12 @@ class ArrayQuery
                             $output[$sourceKey] = self::query($sourceValue, $queryKeyName);
                         }
                     }
+                    // Eg. [ function (array $self) { ... } ]
+                    else if (is_callable($queryKeyName)) {
+                        foreach ($queryKeyName($source) as $callableKey => $callableValue) {
+                            $source[$callableKey] = $output[$callableKey] = $callableValue;
+                        }
+                    }
                     // Eg. [ 'user' ]
                     else if (array_key_exists($queryKeyName, $source)) {
                         $output[$queryKeyName] = $source[$queryKeyName];

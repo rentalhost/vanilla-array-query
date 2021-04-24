@@ -168,7 +168,7 @@ class ArrayQueryTest
                     },
                 ],
                 [ 'users' => [ [ 'id' => 1 ], [ 'id' => 2 ], [ 'id' => 3 ] ] ],
-                'Transforms users in-the-fly, but wrapping values into id array.',
+                'Transforms users on-the-fly, but wrapping values into id array.',
             ],
 
             [
@@ -182,6 +182,84 @@ class ArrayQueryTest
                 ],
                 [ 'users' => [ [ 'id' => 1 ] ] ],
                 'Transforms users, filtering by age === 25 with only id, but keeping the array structure.',
+            ],
+
+            [
+                [ 'users' => [ [ 'id' => 1 ], [ 'id' => 2 ], [ 'id' => 3 ] ] ],
+                [
+                    static function (array $self) {
+                        return [ 'userIds' => array_column($self['users'], 'id') ];
+                    },
+                    'countIds' => static function (array $self) {
+                        return count($self['userIds']);
+                    },
+                ],
+                [ 'userIds' => [ 1, 2, 3 ], 'countIds' => 3 ],
+                'Transforms users, so it will contains only the ids. Count must be 3',
+            ],
+
+            [
+                [ 'name' => 'John Doe', 'age' => 30 ],
+                [ 'age' ],
+                [ 'age' => 30 ],
+                'Readme example: installation.',
+            ],
+
+            [
+                [ 'route' => '/home', 'title' => 'Home', 'description' => 'Initial page', ],
+                [ 'route', 'title' ],
+                [ 'route' => '/home', 'title' => 'Home', ],
+                'Readme example: simple extraction.',
+            ],
+
+            [
+                [ 'header' => [ 'title' => 'Home', 'description' => 'Initial page' ] ],
+                [ 'header' => [ 'title' ] ],
+                [ 'header' => [ 'title' => 'Home' ] ],
+                'Readme example: bidimensional extraction.',
+            ],
+
+            [
+                [ [ 'route' => '/home', 'title' => 'Home' ], [ 'route' => '/admin', 'title' => 'Administrative' ] ],
+                [ [ 'route' ] ],
+                [ [ 'route' => '/home' ], [ 'route' => '/admin' ] ],
+                'Readme example: multidimensional extraction.',
+            ],
+
+            [
+                [ 'header' => [ 'title' => 'Home', 'description' => 'Initial page' ] ],
+                [
+                    'title' => static function (array $page) {
+                        return $page['header']['title'];
+                    },
+                ],
+                [ 'title' => 'Home' ],
+                'Readme example: customized extraction #1.',
+            ],
+
+            [
+                [ 'route' => '/home' ],
+                [
+                    'route' => static function (array $page) {
+                        return 'https://...' . $page['route'];
+                    },
+                ],
+                [ 'route' => 'https://.../home' ],
+                'Readme example: customized extraction #2.',
+            ],
+
+            [
+                [ [ 'route' => '/home', 'title' => 'Home' ], [ 'route' => '/admin', 'title' => 'Administrative' ] ],
+                [
+                    static function (array $page) {
+                        return array_combine(
+                            array_column($page, 'route'),
+                            array_column($page, 'title'),
+                        );
+                    },
+                ],
+                [ '/home' => 'Home', '/admin' => 'Administrative' ],
+                'Readme example: advanced extraction.',
             ],
         ];
     }
