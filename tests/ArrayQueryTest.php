@@ -124,6 +124,13 @@ class ArrayQueryTest
                 [ 'users' => [ 'ids' => [ 1, 2, 3 ] ] ],
                 'Transforms multidimensional users.ids.* into users.ids directly.',
             ],
+
+            [
+                [ 'test' => [ 'PhpToken' => 1, 'tokenize' => 2 ] ],
+                [ 'test' => [ 'PhpToken', 'tokenize' ] ],
+                [ 'test' => [ 'PhpToken' => 1, 'tokenize' => 2 ] ],
+                'Ensure that PhpToken::tokenize() will never be called, because it is_callable().',
+            ],
         ];
     }
 
