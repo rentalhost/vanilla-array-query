@@ -133,13 +133,6 @@ class ArrayQueryTest
             ],
 
             [
-                [ 'test' => [ 'PhpToken' => 1, 'tokenize' => 2 ] ],
-                [ 'test' => [ 'PhpToken', 'tokenize' ] ],
-                [ 'test' => [ 'PhpToken' => 1, 'tokenize' => 2 ] ],
-                'Ensure that PhpToken::tokenize() will never be called, because it is_callable().',
-            ],
-
-            [
                 [ 'userIds' => [ 1, 2, 3, 4, 5 ] ],
                 [
                     'countBefore' => static function (array $self) {
@@ -260,6 +253,13 @@ class ArrayQueryTest
                 ],
                 [ '/home' => 'Home', '/admin' => 'Administrative' ],
                 'Readme example: advanced extraction.',
+            ],
+
+            [
+                [ 'test' => [ 'PhpToken' => 1, 'tokenize' => 2 ] ],
+                [ 'test' => [ 'PhpToken', 'tokenize' ] ],
+                [ 'test' => [ 'PhpToken' => 1, 'tokenize' => 2 ] ],
+                'Ensure that PhpToken::tokenize() will never be called, because it is_callable(), but not in that context.',
             ],
         ];
     }

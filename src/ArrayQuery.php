@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Rentalhost\Vanilla\ArrayQuery;
 
+use Closure;
+
 class ArrayQuery
 {
     public static function query(?array $source, ?array $query): ?array
@@ -29,7 +31,7 @@ class ArrayQuery
                         }
                     }
                     // Eg. [ function (array $self) { ... } ]
-                    else if (is_callable($queryKeyName)) {
+                    else if ($queryKeyName instanceof Closure) {
                         foreach ($queryKeyName($source) as $callableKey => $callableValue) {
                             $source[$callableKey] = $output[$callableKey] = $callableValue;
                         }
@@ -41,7 +43,7 @@ class ArrayQuery
                 }
             }
             // Eg. [ 'user' => function (array $self) { ... } ]
-            else if (is_callable($queryKeyName)) {
+            else if ($queryKeyName instanceof Closure) {
                 $source[$queryKeyGroup] = $output[$queryKeyGroup] = $queryKeyName($source);
             }
             // Eg. [ 'user' => ... ]
